@@ -1,0 +1,55 @@
+Notepad
+Anatações de SQL
+
+Módulos:
+Criando tabelas:
+
+CREATE table DEPARTAMENTOS(
+depart number,
+nome varchar2(50) not null,
+locaricao varchar2(50),
+constraint pk_department primary key (depart) 
+
+);
+
+create table EMPREGADOS (  
+  empr             number,  
+  nome              varchar2(50) not null,  
+  trabalho               varchar2(50),  
+  manager           number,  
+  hiredate          date,  
+  salario            number(7,2),  
+  commisao        number(7,2),  
+  depart          number,  
+  constraint pk_empregados primary key (empno),  
+  constraint fk_employees_department foreign key (depart) 
+      references DEPARTAMENTOS (depart)  
+);
+
+Criando gatilhos:
+
+create or replace trigger  DEPARTMENTS_BIU
+    before insert or update on DEPARTMENTS
+    for each row
+begin
+    if inserting and :new.deptno is null then
+        :new.deptno := to_number(sys_guid(), 
+          'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    end if;
+end;
+/
+
+create or replace trigger EMPLOYEES_BIU
+    before insert or update on EMPLOYEES
+    for each row
+begin
+    if inserting and :new.empno is null then
+        :new.empno := to_number(sys_guid(), 
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX');
+    end if;
+end;
+/
+
+
+insert into departmentos (nome, locaricao) values
+   ('Finance','New York');
